@@ -23,12 +23,7 @@ GATEWAY_IP=`/sbin/ip route | grep $SOURCE_INTERFACE | grep default | awk '{print
 test -r /etc/default/netconsole && . /etc/default/netconsole
 
 # Detect distributive version
-cat /etc/issue|grep -i Ubuntu > /dev/null
-if [ $? -eq 0 ]; then
-    DISTRO="ubuntu"
-fi
-
-cat /etc/issue |grep -i Debian > /dev/null
+cat /etc/issue|grep -Ei 'Debian|Ubuntu' > /dev/null
 if [ $? -eq 0 ]; then
     DISTRO="debian"
 fi
@@ -46,14 +41,6 @@ case "$1" in
                 log_failure_msg "Please set DESTINATION_SERVER_IP variable in /etc/default/netconsole or disable netconsole module"
                 exit 1
             fi           
- 
-            # Encrease logging level up to 8, because standard debian has 7 and did not send many messagesg to netconsole
-            # # https://www.kernel.org/doc/Documentation/sysctl/kernel.txt
-            # standard debian squeeze:
-            
-            # sysctl -a|grep printk
-            # squeeze: kernel.printk = 7   4   1   7
-            # centos: kernel.printk = 6 4   1   7
 
             # If DESTINATION_SERVER_MAC is not defined explicitly we use gateway mac address
             if [ -z "$DESTINATION_SERVER_MAC" ]; then
@@ -64,23 +51,18 @@ case "$1" in
 
             MODULE_OPTIONS="netconsole=$SOURCE_PORT@$SOURCE_IP/$SOURCE_INTERFACE,$DESTINATION_PORT@$DESTINATION_SERVER_IP/$DESTINATION_SERVER_MAC"
 
+            # Encrease logging level up to 8, because standard debian has 7 and did not send many messagesg to netconsole
+            # # https://www.kernel.org/doc/Documentation/sysctl/kernel.txt
+            # standard debian squeeze:
+            
+            # sysctl -a|grep printk
+            # squeeze: kernel.printk = 7   4   1   7
+            # centos: kernel.printk = 6 4   1   7
 
             if [ "$DISTRO" = debian ]; then
-                DEBIAN_VERSION=`cat /etc/debian_version | awk -F. '{print $1}'` 
-            
-                # For Debian 6 Squeeze we should increase verbosity level
-                if [ "$DEBIAN_VERSION" -eq 6 ]; then
-                    /bin/dmesg -n 8 
-                fi
-            fi
-
-            if [ "$DISTRO" = ubuntu ]; then
-                # For Ubuntu 12.04 we need do same
-                cat /etc/issue | grep -i '12\.04' >/dev/null
-               
-                if [ $? -eq 0 ]; then
-                    /bin/dmesg -n 8
-                fi 
+                
+                /bin/echo 8 > /proc/sys/kernel/printk
+                
             fi
 
  
