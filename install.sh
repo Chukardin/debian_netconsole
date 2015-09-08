@@ -68,24 +68,24 @@ service netconsole restart
 
 }
 
-if grep -Ei 'CentOS' < /etc/issue > /dev/null; then
-    DISTRIB=centos
-elif grep -Ei 'Debian\ GNU/Linux\ 8' < /etc/issue > /dev/null; then
+if [ -f /etc/os-release ]; then
+    DISTRIBFILE=/etc/os-release
+else
+    DISTRIBFILE=/etc/issue
+fi
+
+if grep -Ei 'Debian\ GNU/Linux\ 8' < /etc/issue > /dev/null; then
     DISTRIB=debian8
-elif grep -Ei 'Debian|Ubuntu' < /etc/issue > /dev/null; then
-    DISTRIB=debian
-elif [ -f /etc/centos-release ] && grep -Ei 'CentOS\ Linux\ release\ 7' < /etc/centos-release > /dev/null; then
-    DISTRIB=centos7
+elif grep -Ei 'Debian|Ubuntu|Proxmox' < $DISTRIBFILE > /dev/null; then
+     DISTRIB=debian
+elif grep -Ei 'CentOS|Fedora|Parallels|Citrix XenServer' < $DISTRIBFILE > /dev/null; then
+     DISTRIB=centos
 fi
 
 case $DISTRIB in
         centos)
         install_centos
         ;;
-
-    	centos7)
-    	install_centos
-    	;;
 
         debian)
         install_debian
