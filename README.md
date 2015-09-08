@@ -11,7 +11,11 @@ Script is very simple to configure
 Thoroughly tested on:
 - Debian 6 Squeeze
 - Debian 7 Wheezy
+- Debian 8 Jessie
 - Ubuntu 12.04
+- Ubuntu 14.04
+- CentOS 6.6
+- CentOS 7
 
 Fast install:
 ```bash
