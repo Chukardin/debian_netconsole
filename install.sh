@@ -74,7 +74,7 @@ else
     DISTRIBFILE=/etc/issue
 fi
 
-if grep -Ei 'Debian\ GNU/Linux\ 8' < /etc/issue > /dev/null; then
+if grep -Ei 'Debian\ GNU/Linux\ 8' < $DISTRIBFILE > /dev/null; then
     DISTRIB=debian8
 elif grep -Ei 'Debian|Ubuntu|Proxmox' < $DISTRIBFILE > /dev/null; then
      DISTRIB=debian
