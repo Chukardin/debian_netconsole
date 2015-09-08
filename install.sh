@@ -10,9 +10,9 @@ echo "Install arping"
 apt-get install -y arping
 
 echo "Download config"
-wget --no-check-certificate https://raw.githubusercontent.com/Chukardin/debian_netconsole/master/netconsole_conf /etc/default/netconsole
+wget https://raw.githubusercontent.com/Chukardin/debian_netconsole/master/netconsole_conf /etc/default/netconsole
 echo "Download init script"
-wget --no-check-certificate https://raw.githubusercontent.com/Chukardin/debian_netconsole/master/netconsole /etc/init.d/netconsole
+wget https://raw.githubusercontent.com/Chukardin/debian_netconsole/master/netconsole /etc/init.d/netconsole
 
 chmod +x /etc/init.d/netconsole
 
